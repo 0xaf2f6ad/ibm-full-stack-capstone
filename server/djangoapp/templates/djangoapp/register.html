@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+<!-- title-->
+{% block title %}Register{% endblock title %}
+<!-- registeration form -->
+{% block body %}
+
+<form action="{% url 'djangoapp:register' %}" method="post" class="container">
+    {% csrf_token %}
+    <div class="form-group">
+        <legend>Register for an account</legend>
+    </div>
+    <br>
+    <div class="form-group">
+        <label class="form-label">First Name</label>
+        <input
+            type="text"
+            class="form-control"
+            name="first_name"
+            placeholder="Enter First Name"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label class="form-label">Last Name</label>
+        <input
+            type="text"
+            class="form-control"
+            name="last_name"
+            placeholder="Enter Last Name"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label class="form-label">Username</label>
+        <input
+            type="text"
+            class="form-control"
+            name="un"
+            placeholder="Enter Username"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label class="form-label">Password</label>
+        <input
+            type="password"
+            class="form-control"
+            name="pwd"
+            placeholder="Enter Password"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <button class="btn btn-outline-success">Register</button>
+    </div>
+</form>
+
+{% endblock body %}
