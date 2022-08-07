@@ -6,8 +6,6 @@ on: workflow_dispatch
 env:
   IBM_CLOUD_REGION: au-syd
   IBM_CLOUD_SPACE: djangoserver-spac
-  IBM_CLOUD_GROUP: e3897f6104fe4953b09a27920350b768
-  IBM_CLOUD_ORG: jupyter1186@gmail.com
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
   MANIFEST_NAME: manifest.yml
 
@@ -33,10 +31,10 @@ jobs:
         shell: bash
       - name: Log into IBM Cloud
         run: |
-          ibmcloud login --apikey "$IBM_CLOUD_API" -r "$IBM_CLOUD_REGION" -g "$IBM_CLOUD_GROUP"
+          ibmcloud login --apikey "$IBM_CLOUD_API" -r "$IBM_CLOUD_REGION"
         shell: bash
       - name: Target CF
-        run: ibmcloud target --cf-api https://api.$IBM_CLOUD_REGION.cf.cloud.ibm.com -r $IBM_CLOUD_REGION -o $IBM_CLOUD_ORG -s $IBM_CLOUD_SPACE
+        run: ibmcloud target --cf -r $IBM_CLOUD_REGION -s $IBM_CLOUD_SPACE
         shell: bash
       - name: List all applications
         run: ibmcloud cf apps
