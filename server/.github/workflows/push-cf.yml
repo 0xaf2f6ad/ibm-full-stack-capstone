@@ -5,8 +5,8 @@ on: workflow_dispatch
 # Environment variables available to all jobs and steps in this workflow
 env:
   IBM_CLOUD_REGION: au-syd
-  IBM_CLOUD_GROUP: default
   IBM_CLOUD_SPACE: djangoserver-spac
+  IBM_CLOUD_GROUP: e3897f6104fe4953b09a27920350b768
   IBM_CLOUD_ORG: jupyter1186@gmail.com
   IBM_CLOUD_API: ${{secrets.IBM_CLOUD_API_KEY}}
   MANIFEST_NAME: manifest.yml
