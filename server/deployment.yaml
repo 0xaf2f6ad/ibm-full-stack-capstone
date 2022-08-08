@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run: dealership
-  name: dealership
+    run: ibm-capstone-dealership
+  name: ibm-capstone-dealership
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: dealership
+      run: ibm-capstone-dealership
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -17,12 +17,12 @@ spec:
   template:
     metadata:
       labels:
-        run: dealership
+        run: ibm-capstone-dealership
     spec:
       containers:
       - image: 0xaf2f6ad/ibm-capstone-dealership:latest
         imagePullPolicy: Always
-        name: dealership
+        name: ibm-capstone-dealership
         ports:
         - containerPort: 8000
           protocol: TCP
