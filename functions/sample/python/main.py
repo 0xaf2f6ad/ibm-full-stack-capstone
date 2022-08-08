@@ -1,19 +1,14 @@
-#
-#
-# main() will be run when you invoke this action
-#
-# @param Cloud Functions actions accept a single parameter, which must be a JSON object.
-#
-# @return The output of this action, which must be a JSON object.
-#
-#
 from cloudant.client import Cloudant
 from cloudant.error import CloudantException
+from ibmcloudant import CloudantV1
 import requests
 
 
 def main(dict):
-    databaseName = "dealerships"
+    c = CloudantV1.new_instance()
+    c.set_service_url(dict["COUCH_URL"])
+    for each in c.post_all_docs("reviews").get_result().json():
+        ...
 
     try:
         client = Cloudant.iam(
@@ -21,7 +16,7 @@ def main(dict):
             api_key=dict["IAM_API_KEY"],
             connect=True,
         )
-        print("Databases: {0}".format(client.all_dbs()))
+        print(f"Databases: {client.all_dbs()}")
     except CloudantException as ce:
         print("unable to connect")
         return {"error": ce}

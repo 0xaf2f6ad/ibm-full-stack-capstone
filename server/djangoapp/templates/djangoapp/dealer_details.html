@@ -1,18 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dealership Review</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
+{% extends 'base.html' %}
+<!---->
+{% block title %}
+Dealer Reviews
+{% endblock title %}
+<!---->
+{% block body %}
 
-    <body>
+<div class="py-4" style="display: flex; justify-content: space-between; align-items: center">
+  <legend>{{ dealer.full_name }} Reviews</legend>
+  <a href="{% url 'djangoapp:add_review' dealer_id %}" class="btn btn-outline-primary" style="width: fit-content">
+    Leave a review
+  </a>
+</div>
 
-    <!--Add a nav bar here -->
+<div class="gap-4" style="display: flex ">
+{% for review in dealer_reviews %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{ review.name }}</h5>
+        <p class="card-text">{{ review.review }}</p>
+        <p class="card-text">Vehicle : {{ review.car_make }}, {{ review.car_model }} ({{ review.car_year }})</p>
+        <hr>
+        {% if review.sentiment == 'positive' %}
+        <p class="card-text" style="color: green">
+            Sentiment : {{ review.sentiment }}
+        </p>
+        {% elif review.sentiment == 'negative' %}
+        <p class="card-text" style="color: red">
+            Sentiment : {{ review.sentiment }}
+        </p>
+        {% else %}
+        <p class="card-text" style="color: orange">
+            Sentiment : {{ review.sentiment }}
+        </p>
+        {% endif %}
+      </div>
+    </div>
+{% endfor %}
+</div>
 
-    <!-- Add reviews as cards -->
-
-    </body>
-
-</html>
+{% endblock body %}

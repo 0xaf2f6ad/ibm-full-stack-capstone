@@ -1,16 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+{% extends 'base.html' %}
 
-</head>
-    <body>
-    <!--Add review form here -->
-    </body>
-</html>
+{% block title %}Add a review{% endblock title %}
+
+<!---->
+{% block body %}
+
+
+<legend>Leave a review about {{ dealer.full_name }}</legend>
+
+<form
+  class="card form-input-field-w"
+  action="{% url 'djangoapp:add_review' dealer.id %}"
+  method="post"
+>
+  {% csrf_token %}
+  <div class="card-body">
+    <div class="form-group">
+      <label class="form-label">Your name</label>
+      <input class="form-control" type="text" name="name" required />
+    </div>
+    <br>
+    <div class="form-group">
+      <label>Leave your thoughts below</label>
+      <textarea class="form-control" rows="3" name="review" required></textarea>
+    </div>
+    <br>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="purchase">
+      <label class="form-check-label" for="flexCheckDefault">
+        Did you purchase the car from {{ dealer.full_name }}?
+        (leave the fields below if you did not purchase from this dealer)
+      </label>
+    </div>
+    {% if cars %}
+    <br>
+    <div class="form-group">
+      <label>When did you purchase the vehicle?</label>
+      <select class="form-control" name="car_info">
+        {% for car in cars %}
+          {% for each in car.carmake.all %}
+          <option value="{{car.name}}|{{each.name}}|{{car.year}}">
+            {{each.name}}, {{car.name}} ({{car.year}})
+          </option>
+          {% endfor %}
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    <br>
+    <div class="form-group">
+      <label>When did you purchase the vehicle?</label>
+      <input class="form-control" type="date" name="purchase_date" id="pd" />
+    </div>
+    <br>
+    <div class="form-group">
+      <input
+        class="btn btn-outline-success"
+        type="submit"
+        placeholder="Submit Review"
+      />
+    </div>
+  </div>
+</form>
+
+{% endblock body %}

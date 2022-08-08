@@ -84,6 +84,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -125,3 +126,12 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(STATIC_ROOT, "media")
 MEDIA_URL = "/media/"
+
+# other environment variables related to the project
+API_KEY, WATSON_API_KEY = "", ""
+
+if "apikey.txt" in os.listdir():
+    with open("apikey.txt", "r") as f:
+        o = list(f.readlines())
+        API_KEY = o[0].strip()
+        WATSON_API_KEY = o[1].strip()

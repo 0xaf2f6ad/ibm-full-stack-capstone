@@ -1,39 +1,56 @@
+import dataclasses
 from django.db import models
 from django.utils.timezone import now
 
 
-# Create your models here.
+class CarMake(models.Model):
+    name = models.CharField(max_length=60)
+    description = models.TextField()
 
-# <HINT> Create a Car Make model `class CarMake(models.Model)`:
-# - Name
-# - Description
-# - Any other fields you would like to include in car make model
-# - __str__ method to print a car make object
+    objects = models.Manager()
 
-
-# class CarMake(models.Model):
-#     name = models.CharField(max_length=60)
-#     description = models.TextField()
-#
-#     def __str__(self):
-#         return f"Make : {self.name}"
-#
-#
-# class CarModel(models.Model):
-#     name = models.CharField(max_length=60)
+    def __str__(self):
+        return f"Make : {self.name}"
 
 
-# <HINT> Create a Car Model model `class CarModel(models.Model):`:
-# - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
-# - Name
-# - Dealer id, used to refer a dealer created in cloudant database
-# - Type (CharField with a choices argument to provide limited choices such as Sedan, SUV, WAGON, etc.)
-# - Year (DateField)
-# - Any other fields you would like to include in car model
-# - __str__ method to print a car make object
+class CarModel(models.Model):
+    name = models.CharField(max_length=60)
+    car_type = models.CharField(max_length=30)
+    carmake = models.ManyToManyField(CarMake)
+    dealer_id = models.IntegerField()
+    year = models.DateField(default=now)
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return f"{self.name} |  {self.car_type} | {self.year}"
 
 
-# <HINT> Create a plain Python class `CarDealer` to hold dealer data
+@dataclasses.dataclass
+class CarDealer:
+    docid: int
+    id: int
+    full_name: str
+    short_name: str
+    address: str
+    zip: str
+    city: str
+    state: str
+    lat: float
+    long: float
+    st: str
 
 
-# <HINT> Create a plain Python class `DealerReview` to hold review data
+@dataclasses.dataclass
+class DealerReview:
+    id: str
+    dealership: int
+    name: str = "unknown"
+    review: str = "unknown"
+    purchase: str = "unknown"
+    purchase_date: str = "unknown"
+    car_make: str = "unknown"
+    car_model: str = "unknown"
+    car_year: str = "unknown"
+    # watson related
+    sentiment: str = "not-checked"

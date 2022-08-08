@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -5,10 +6,10 @@ from django.shortcuts import render, redirect
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
-from django.contrib import messages
-from datetime import datetime
+
+from djangoapp.models import CarModel
+from . import restapis
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +53,8 @@ def login_request(request):
     if request.method == "POST":
         un, pwd = request.POST["un"], request.POST["pwd"]
         user = authenticate(username=un, password=pwd)
+        if user is None:
+            messages.warning(request, "Invalid username or password")
         if not user is None:
             login(request, user)
     return redirect("djangoapp:index")
@@ -62,19 +65,36 @@ def logout_request(request):
     return redirect("djangoapp:index")
 
 
-# Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     context = {}
-    # if request.method == "GET":
-    #     return render(request, "djangoapp/index.html", context)
+    context["dealerships"] = restapis.get_dealerships()
     return render(request, "djangoapp/index.html", context)
 
 
-# Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
-    ...
+    context = {"dealer_id": dealer_id, "dealer": restapis.get_a_dealer(dealer_id)}
+    reviews = restapis.get_dealer_reviews_from_cf(dealer_id)
+    context["dealer_reviews"] = list(
+        filter(lambda x: int(x.dealership) == int(dealer_id), reviews)
+    )
+    return render(
+        request, template_name="djangoapp/dealer_details.html", context=context
+    )
 
 
-# Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-    ...
+    context = {}
+    if request.method == "POST":
+        out = restapis.add_review(request, dealer_id)
+        if not out:
+            messages.warning(request, message="Error could not post review")
+        else:
+            messages.info(request, message="Review submitted successfully")
+        return redirect("djangoapp:dealer_details", dealer_id)
+    else:
+        context["dealer"] = restapis.get_a_dealer(dealer_id)
+        context["cars"] = CarModel.objects.filter(dealer_id=dealer_id)
+        # for model in CarModel.objects.filter(dealer_id=dealer_id):
+        #     for make in model.carmake.all():
+        #         context["cars"].append(make)
+    return render(request, template_name="djangoapp/add_review.html", context=context)
